@@ -8,7 +8,6 @@ function injectContentScriptAndSendMessage(tab, message) {
       return;
     }
     
-    // Wait a bit to ensure the script is fully loaded
     setTimeout(() => {
       chrome.tabs.sendMessage(tab.id, message, response => {
         if (chrome.runtime.lastError) {
@@ -37,6 +36,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
       });
     });
+  } else if (request.action === "processCroppedImage") {
+    // Here you would typically send the image to an AI service for processing
+    // For this example, we'll simulate it with a timeout
+    setTimeout(() => {
+      const eventDetails = {
+        title: "Sample Event",
+        date: new Date().toISOString().split('T')[0], // Today's date
+        time: "14:00",
+        description: "This is a sample event created from a cropped image."
+      };
+      createCalendarEvent(eventDetails);
+    }, 2000);
   }
   return true;
 });
+
+function createCalendarEvent(eventDetails) {
+  // In a real-world scenario, you would use the Google Calendar API here
+  // For this example, we'll just log the event details
+  console.log("Creating calendar event:", eventDetails);
+  
+  // Simulate adding to calendar
+  alert(`Event "${eventDetails.title}" added to calendar for ${eventDetails.date} at ${eventDetails.time}`);
+}

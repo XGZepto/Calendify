@@ -9,11 +9,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return true;
     }
     
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
     html2canvas(document.body, {
       logging: false,
       useCORS: true,
       allowTaint: true,
-      foreignObjectRendering: false
+      foreignObjectRendering: false,
+      width: viewportWidth,
+      height: viewportHeight,
+      windowWidth: viewportWidth,
+      windowHeight: viewportHeight,
+      x: window.scrollX,
+      y: window.scrollY
     }).then(canvas => {
       const imageData = canvas.toDataURL('image/png');
       chrome.runtime.sendMessage({action: "openCropper", imageData: imageData});

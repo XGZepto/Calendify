@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Crop Event Details</title>
-  <link rel="stylesheet" href="/libs/cropper.min.css">
-  <style>
-    #image { max-width: 100%; }
-    #cropBtn { margin-top: 10px; }
-  </style>
+    <title>Crop Event Details</title>
+    <link rel="stylesheet" href="/libs/cropper.min.css">
+    <link rel="stylesheet" href="cropper.css">
 </head>
 <body>
-  <img id="image" src="" alt="Screenshot">
-  <button id="cropBtn">Crop and Process</button>
-  <script src="/libs/cropper.min.js"></script>
-  <script src="cropper.js"></script>
+    <div class="header">
+        <h1>Crop Event Details</h1>
+    </div>
+    <div class="content">
+        <div id="image-container">
+            <img id="image" src="" alt="Screenshot">
+        </div>
+        <button id="cropBtn">Crop and Process</button>
+    </div>
+    <script src="/libs/cropper.min.js"></script>
+    <script src="cropper.js"></script>
 </body>
 </html>
