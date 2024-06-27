@@ -1,27 +1,25 @@
 {
-    "manifest_version": 3,
-    "name": "Calendify",
-    "version": "1.0",
-    "description": "Capture event details and add to Google Calendar",
-    "permissions": [
-      "activeTab",
-      "storage",
-      "identity",
-      "tabs"
-    ],
-    "host_permissions": [
-      "https://www.googleapis.com/"
-    ],
-    "action": {
-      "default_popup": "popup/popup.html"
-    },
-    "background": {
-      "service_worker": "background.js"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content-scripts/content.js"]
-      }
-    ]
-  }
+  "manifest_version": 3,
+  "name": "Event Screenshotter",
+  "version": "1.0",
+  "description": "Capture event details and add to Google Calendar",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["libs/*", "cropper/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

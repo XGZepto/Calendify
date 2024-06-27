@@ -1,25 +1,45 @@
 let cropper;
 
+console.log("Cropper script loaded");
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log("Message received in cropper:", request);
   if (request.action === "initCropper") {
-    const image = document.getElementById('image');
-    image.src = request.imageData;
-    image.onload = () => {
-      cropper = new Cropper(image, {
-        aspectRatio: NaN,
-        viewMode: 1,
-      });
-    };
+    initCropper(request.imageData);
+    sendResponse({success: true});
   }
+  return true;
 });
 
+function initCropper(imageData) {
+  const image = document.getElementById('image');
+  image.src = imageData;
+  image.onload = () => {
+    try {
+      if (typeof Cropper !== 'undefined') {
+        cropper = new Cropper(image, {
+          aspectRatio: NaN,
+          viewMode: 1,
+        });
+      } else {
+        console.error('Cropper is not defined. Make sure the library is loaded correctly.');
+      }
+    } catch (error) {
+      console.error('Error initializing Cropper:', error);
+    }
+  };
+}
+
 document.getElementById('cropBtn').addEventListener('click', () => {
-  const croppedCanvas = cropper.getCroppedCanvas();
-  const croppedImageData = croppedCanvas.toDataURL('image/png');
-  
-  // Here, you would send the croppedImageData to your AI service for processing
-  // For now, we'll just log it
-  console.log("Cropped image data:", croppedImageData);
-  
-  // TODO: Implement AI processing and Google Calendar integration
+  if (cropper && typeof cropper.getCroppedCanvas === 'function') {
+    try {
+      const croppedCanvas = cropper.getCroppedCanvas();
+      const croppedImageData = croppedCanvas.toDataURL('image/png');
+      chrome.runtime.sendMessage({action: "processCroppedImage", imageData: croppedImageData});
+    } catch (error) {
+      console.error('Error cropping image:', error);
+    }
+  } else {
+    console.error('Cropper is not properly initialized');
+  }
 });
