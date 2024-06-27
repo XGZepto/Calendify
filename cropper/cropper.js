@@ -1,3 +1,7 @@
+import { parseEventImage } from '../utils/api-utils.js';
+import { initializeGoogleCalendar, authenticateAndAddEvent } from '../utils/calendar-utils.js';
+import { generateICSFile } from '../utils/ics-utils.js';
+
 let cropper;
 
 console.log("Cropper script loaded");
@@ -115,21 +119,20 @@ function showLoadingAnimation(dialog) {
 }
 
 function processImage(imageData, dialog) {
-  // Simulate AI processing
-  setTimeout(() => {
-      // 80% chance of success
-      if (Math.random() < 0.8) {
-          const eventDetails = {
-              title: "AI Generated Event",
-              date: new Date().toISOString().split('T')[0],
-              time: "14:00",
-              description: "This is an AI-generated event based on the cropped image."
-          };
-          showResultPreview(eventDetails, dialog);
-      } else {
-          showErrorMessage(dialog);
-      }
-  }, 3000); // Simulate 3 seconds of processing
+  const eventDetails = {
+      title: "AI Generated Event",
+      date: new Date().toISOString().split('T')[0],
+      time: "14:00",
+      description: "This is an AI-generated event based on the cropped image."
+  };
+  showLoadingAnimation(dialog);
+  try {
+    // const eventDetails = await parseEventImage(imageData);
+    showResultPreview(eventDetails, dialog);
+  } catch (error) {
+    console.error('Error processing image:', error);
+    showErrorMessage(dialog);
+  }
 }
 
 function showResultPreview(eventDetails, dialog) {
@@ -155,15 +158,13 @@ function showResultPreview(eventDetails, dialog) {
   const addToCalendarBtn = document.createElement('button');
   addToCalendarBtn.textContent = 'Add to Google Calendar';
   addToCalendarBtn.addEventListener('click', () => {
-      // Implement Google Calendar integration here
-      alert('Adding to Google Calendar... (Not implemented in this demo)');
+    openGoogleCalendarEvent(eventDetails);
   });
 
   const downloadICSBtn = document.createElement('button');
   downloadICSBtn.textContent = 'Download ICS File';
   downloadICSBtn.addEventListener('click', () => {
-      // Implement ICS file generation and download here
-      alert('Downloading ICS file... (Not implemented in this demo)');
+    generateICSFile(eventDetails);
   });
 
   const closeBtn = document.createElement('button');
